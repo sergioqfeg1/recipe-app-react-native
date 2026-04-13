@@ -70,6 +70,26 @@ app.delete("/api/favorites/:userId/:recipeId", async (req, res) => {
     }
 })
 
+app.get("/api/favorites/:userId", async (req, res) => {
+    try {
+        const {userId} = req.params
+        const userFavorites = await db
+                .select()
+                .from(favoritesTable)
+                .where(
+                    eq(favoritesTable.userId, 
+                        userId
+                    )
+                )
+        res.json(userFavorites) //El estado es implícito
+    } catch (err) {
+        console.log("Error fetching the favorites", err)
+        res
+        .status(500)
+        .json({error: "Oops: Something went wrong"})
+    }
+})
+
 app.listen(port, () => {
     //Al correr con nodemon se actualiza automaticamente (dev)
     console.log(`Server is running on http://localhost:${port}`)
