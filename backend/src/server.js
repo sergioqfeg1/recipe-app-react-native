@@ -1,8 +1,8 @@
 import express from "express"
-import "dotenv/config"
+import { ENV } from "./config/env.js"
 
 const app = express()
-const port = process.env.PORT || 8001
+const port = ENV.PORT || 8001
 
 app.listen(port, () => {
     //Al correr con nodemon se actualiza automaticamente (dev)
