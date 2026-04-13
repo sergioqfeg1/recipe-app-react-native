@@ -1,15 +1,32 @@
-import { Text, View } from "react-native";
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Image } from "expo-image"
+import { Link } from "expo-router";
 
 export default function Index() {
   return (
     <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
+      style={styles.container}
     >
-      <Text>Edit app/index.tsx to edit this screen.</Text>
+      <Text style={styles.text}>Edit app/index.tsx to edit this screen.</Text>
+      <TouchableOpacity>
+        <Text>Press Me</Text>
+      </TouchableOpacity>
+      <Link
+        href={"/about"}>
+          Visit about screen
+      </Link>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  text: {
+    color: "blue",
+    fontSize: 40
+  }
+})
