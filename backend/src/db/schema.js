@@ -1,7 +1,6 @@
 import {pgTable, serial, text, timestamp, integer} from "drizzle-orm/pg-core"
 
 export const favoritesTable = pgTable("favorites", {
-    //No es una muy buena práctica ponerlo como serial
     id: serial("id").primaryKey(),
     userId: text("user_id").notNull(),
     recipeId: integer("recipe_id").notNull(),
