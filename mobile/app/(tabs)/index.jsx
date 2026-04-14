@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, RefreshControl, TouchableOpacity } from 'react-native'
+import { View, Text, ScrollView, RefreshControl, TouchableOpacity, FlatList } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'expo-router'
 import { MealAPI } from '../../services/mealAPI.js'
@@ -6,6 +6,10 @@ import { homeStyles } from '../../assets/styles/home.styles.js'
 import { Image } from 'expo-image'
 import { Ionicons } from '@expo/vector-icons'
 import { COLORS } from '@/constants/colors'
+import CategoryFilter from '../../components/CategoryFilter.jsx'
+import RecipeCard from '../../components/RecipeCard.jsx'
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(() => resolve, ms))
 
 const HomeScreen = () => {
 
@@ -21,15 +25,15 @@ const HomeScreen = () => {
     try {
       setLoading(true)
       const [
-        apiCategories, 
-        randomMeals, 
+        apiCategories,
+        randomMeals,
         featuredMeal
       ] = await Promise.all([
-        MealAPI.getCategories(), 
+        MealAPI.getCategories(),
         MealAPI.getRandomMeals(12),
         MealAPI.getRandomMeal(),
       ])
-      
+
       const mappedCategories = apiCategories.map((cat, index) => ({
         id: index + 1,
         name: cat.strCategory,
@@ -38,6 +42,8 @@ const HomeScreen = () => {
       }))
 
       setCategories(mappedCategories)
+
+      if (!selectedCategory) setSelectedCategory(mappedCategories[0].name)
 
       const mappedMeals = randomMeals
         .map((meal) => MealAPI.mapMealData(meal))
@@ -72,6 +78,13 @@ const HomeScreen = () => {
     await loadCategoryData(category)
   }
 
+  const onRefresh = async () => {
+    setRefreshing(true)
+    sleep(2000)
+    await loadData()
+    setRefreshing(false)
+  }
+
   useEffect(() => {
     loadData()
   }, [])
@@ -83,7 +96,8 @@ const HomeScreen = () => {
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
-            onRefresh={loadData}
+            onRefresh={onRefresh}
+            tintColor={COLORS.primary}
           />
         }
         contentContainerStyle={homeStyles.scrollContent}
@@ -114,7 +128,7 @@ const HomeScreen = () => {
         </View>
 
             {/* FEATURED SECTION */}
-            {featuredRecipe && 
+            {featuredRecipe &&
               <View style={homeStyles.featuredSection}>
                 <TouchableOpacity
                   style={homeStyles.featuredCard}
@@ -157,6 +171,39 @@ const HomeScreen = () => {
                 </TouchableOpacity>
               </View>
             }
+
+        {categories.length > 0 && (
+          <CategoryFilter
+            categories={categories}
+            selectedCategory={selectedCategory}
+            onSelectCategory={handleCategorySelect}
+          />
+        )}
+
+        <View style={homeStyles.recipesSection}>
+          <View style={homeStyles.sectionHeader}>
+            <Text style={homeStyles.sectionTitle}>{selectedCategory}</Text>
+          </View>
+
+
+          <FlatList
+            data={recipes}
+            renderItem={({item}) => <RecipeCard recipe={item} />}
+            keyExtractor={(item) => item.id.toString()}
+            numColumns={2}
+            columnWrapperStyle={homeStyles.row}
+            contentContainerStyle={homeStyles.recipesGrid}
+            scrollEnabled={false}
+            ListEmptyComponent={
+              <View style={homeStyles.emptyState}>
+                <Ionicons name='restaurant-outline' size={64} color={COLORS.textLight} />
+                <Text style={homeStyles.emptyTitle}>No recipes found</Text>
+                <Text style={homeStyles.emptyDescription}>Try a different categry</Text>
+              </View>
+            }
+          />
+
+        </View>
 
       </ScrollView>
     </View>
