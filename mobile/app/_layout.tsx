@@ -1,6 +1,6 @@
 import { Slot } from "expo-router";
-import { ClerkProvider } from '@clerk/expo'
-import { tokenCache } from '@clerk/expo/token-cache'
+import { ClerkProvider } from '@clerk/clerk-expo'
+import { tokenCache } from '@clerk/clerk-expo/token-cache'
 import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS } from "@/constants/colors";
 

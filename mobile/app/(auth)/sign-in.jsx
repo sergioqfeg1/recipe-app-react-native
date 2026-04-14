@@ -1,6 +1,6 @@
 import { View, Text, Alert, KeyboardAvoidingView, Platform, ScrollView, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native'
-import { useSignIn } from '@clerk/expo'
-import { useAuth } from '@clerk/expo'
+import { useSignIn } from '@clerk/clerk-expo'
+import { useAuth } from '@clerk/clerk-expo'
 import { useRouter } from 'expo-router'
 import { useState } from 'react'
 import { authStyles } from '../../assets/styles/auth.styles'
