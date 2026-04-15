@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons'
 import { COLORS } from '../../constants/colors'
 import RecipeCard from '../../components/RecipeCard'
 import NoFavoritesFound from '../../components/NoFavoritesFound'
+import LoadingSpinner from '../../components/LoadingSpinner'
 
 const FavoritesScreen = () => {
 
@@ -41,9 +42,25 @@ const FavoritesScreen = () => {
     loadFavorites()
   }, [user?.id])
 
-  const handleSignOut = async () => {}
+  const handleSignOut = () => {
+    Alert.alert(
+      "Logout", 
+      "Are you sure that you want to log out?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel"
+        },
+        {
+          text: "Logout",
+          style: "destructive",
+          onPress: signOut
+        },
+      ]
+    )
+  }
 
-  if (loading) return <Text>Loading favorites...</Text>
+  if (loading) return <LoadingSpinner message='Loading your favorites...' />
 
   return (
     <View style={favoritesStyles.container}>
