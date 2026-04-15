@@ -1,0 +1,1 @@
+export const API_URL = "https://recipe-app-react-native-qj62.onrender.com/api"
